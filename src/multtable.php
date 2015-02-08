@@ -62,18 +62,32 @@ if (!$errorIn_parms){
 }
 
 //if still no error, process table
+//set the width and height
 $tbl_height = $output_parms["max-multiplicand"] - $output_parms["min-multiplicand"] + 2;
 $tbl_width = $output_parms["max-multiplier"] - $output_parms["min-multiplier"] + 2;
 
-    if (!$errorIn_parms){
+//build the table
+if (!$errorIn_parms){
     echo "<table>
           <caption>Multiplication Table</caption>
           <tbody>";
 
     for ($row = 0; $row < $tbl_height; $row++){
         echo "<tr>";
+        if ($row == 0){
+            $row_val = " ";
+        } else {
+            $row_val = $output_parms["min-multiplicand"] + $row - 1;
+        }
         for ($col = 0; $col < $tbl_width; $col++){
-            echo "<th> [$row, $col]";
+            $col_val = $output_parms["min-multiplier"] + $col - 1;
+            if ($col == 0){
+                echo "<th> $row_val";
+            } else if ($row == 0) {
+                echo "<th> $col_val";
+            } else {
+                echo "<th>".$row_val * $col_val;
+            }
         }
     }
     echo "</table>";
