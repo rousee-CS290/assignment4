@@ -8,9 +8,10 @@
   <body>
 
 <?php
-// turn on error reporting
-foreach($_POST as $key => $value){
-        echo "KEY $key, VALUE $value <br>";
+if($_POST['username'] != null){
+    echo "Hello $_POST[username], you have visited this page # times.";
+} else {
+    echo "A username must be entered. Click <a href=".'"./login.php">'."here</a> to return to login screen.";
 }
 ?>
   </body>
