@@ -18,6 +18,8 @@ We require four integer parameters passed via HTTP GET
     <li>max-multiplier
 </ul>";
 
+
+
 //print all the keys and values if debug is on
 if(isset($_GET['debug'])){
     foreach($_GET as $key => $value){
@@ -26,32 +28,17 @@ if(isset($_GET['debug'])){
 }
 //take an input and convert to an integer, if possible
 
-if(isset($_GET['min-multiplicand'])){
-    if (ctype_digit($_GET['min-multiplicand'])){
-        echo "<br> YOU DID IT! <br>";
+$input_params = array("min-multiplicand", "max-multiplicand", "min-multiplier", "max-multiplier");
+foreach ($input_params as $parm){
+    if(isset($_GET[$parm])){
+        if (ctype_digit($_GET[$parm])){
+            echo "<br> YOU DID IT! <br>";
+        } else {
+            echo "$parm must be an integer >= 0";
+        }
     } else {
-        echo "min-multiplicand must be an integer";
+        echo "missing parameter: $parm<br>";
     }
-} else {
-    echo "missing parameter: min-multiplicand<br>";
-}
-
-if(isset($_GET['max-multiplicand'])){
-    echo "<br> YOU DID IT! <br>";
-} else {
-    echo "missing parameter: max-multiplicand<br>";
-}
-
-if(isset($_GET['min-multiplier'])){
-    echo "<br> YOU DID IT! <br>";
-} else {
-    echo "missing parameter: min-multiplier<br>";
-}
-
-if(isset($_GET['max-multiplier'])){
-    echo "<br> YOU DID IT! <br>";
-} else {
-    echo "missing parameter: max-multiplier<br>";
 }
 
 
