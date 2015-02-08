@@ -2,8 +2,7 @@
 <html lang = "en">
   <head>
     <meta charset="UTF-8">
-    <title>multtable PHP example</title>
-    <link rel="stylesheet" href="style.css">
+    <title>login PHP</title>
   </head>
   <body>
     <p> This is a Login Page!</p>
