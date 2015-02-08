@@ -10,10 +10,24 @@
 // turn on error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
-echo "This is a JSON! <br>";
 
 
 
-//print all the keys and values if debug is on
-$enc = json_encode($_GET);
+//check request method
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if (empty($_POST)){
+      $_POST["parameters"] = null;
+    } 
+    $_POST["Type"] = "POST";
+    $enc = json_encode($_POST);
+} else if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+    if (empty($_GET)){
+      $_GET["parameters"] = null;
+    }
+    $_GET["Type"] = "GET";
+    $enc = json_encode($_GET);
+}
+
 echo "$enc";
+
+?>
