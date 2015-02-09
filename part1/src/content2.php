@@ -38,7 +38,7 @@ if(isset($_SESSION['active']) && $_SESSION['active']){
     killsession();
 }
 ?>
-    <form action="./content1.php"
+  <form action="./content1.php"
       method = "post">
       <p><input type="submit" value="Logout" name="logout"></p>
     </form>
