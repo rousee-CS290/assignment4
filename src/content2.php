@@ -16,7 +16,7 @@ echo '<!DOCTYPE html>
           </head>
           <body>';
 //session stuff...
-if(isset($_SESSION['username']) && $_SESSION['username'] != null){
+if(isset($_SESSION['active']) && $_SESSION['active']){
     echo "Hello $_SESSION[username], you have visited this page $_SESSION[c2visits] times.<br>";
     echo "Click <a href=".'"./content1.php">'."here</a> for content1.";
     $_SESSION['c2visits']++;

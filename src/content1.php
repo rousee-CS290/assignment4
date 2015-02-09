@@ -3,6 +3,12 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
 session_start();
+function killsession(){
+    $_SESSION = array();
+    session_destroy();
+    http_redirect("./login.php");
+    die();
+}
 echo '<!DOCTYPE html>
         <html lang = "en">
           <head>
@@ -25,24 +31,21 @@ if(isset($_POST['username']) && $_POST['username'] != null) {
             $_SESSION['active'] = True;
         }
     }
-
-} elseif(isset($_POST['username']) && $_POST['username'] == null) {
-    echo "A username must be entered. Click <a href=".'"./login.php">'."here</a> to return to login screen.";
-    $_SESSION = array();
-    session_destroy();
-    die();
     
 } elseif(isset($_POST['logout']) && $_POST['logout'] == "Logout"){
-    echo "Logged Out. Click <a href=".'"./login.php">'."here</a> to return to login screen.";
-    $_SESSION = array();
-    session_destroy();
-    die();
+    echo "Logged Out. Click <a href=".'"./login.php">'."here</a> to return to login screen, or wait to be redirected.";
+    killsession();
+
+
 }
 //session stuff...
 if(isset($_SESSION['active']) && $_SESSION['active']) {
     echo "Hello $_SESSION[username], you have visited this page $_SESSION[c1visits] times.<br>";
     echo "Click <a href=".'"./content2.php">'."here</a> for content2.";
     $_SESSION['c1visits']++;
+} else {
+    echo "A username must be entered. Click <a href=".'"./login.php">'."here</a> to return to login screen, or wait to be redirected.";
+    killsession();
 }
 ?>
     <form action="./content1.php"
