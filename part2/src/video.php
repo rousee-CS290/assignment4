@@ -29,14 +29,34 @@ if ($mysqli->connect_errno){
             Length: <input type="text" name="length">
                     <input type="submit" name="AddVideo" value="add a video"></p>
     </fieldset>
+    <fieldset>
+        <legend>Filter the Videos</legend>
+        <select name="filter">
+            <option value="_allmovies_">All Movies</option>
+        <?php
+            if(!($stmt = $mysqli->prepare("SELECT DISTINCT category FROM videos ORDER BY category"))){
+                echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
+            }
+            if(!$stmt->execute()){
+                echo "Execute failed: "  . $stmt->errno . " " . $stmt->error;
+            }
+            if(!$stmt->bind_result($category)){
+                echo "Bind failed: "  . $stmt->errno . " " . $stmt->error;
+            }
+            while($stmt->fetch()){
+             echo '<option value="'. $category .'"> ' . $category . '</option>\n';
+            }
+            $stmt->close();
+        ?>
+        </select>
+        <input type="submit" name="FilterVideo" value="apply filter">
+    </fieldset>
 </form>
-<?php
 
-?>
 
 
 <?php
-
+$filter_val = 0;
 //check request method
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     //delete all videos button
@@ -54,9 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     }
     //add a video section
     if (!empty($_POST['AddVideo']) && $_POST['AddVideo'] == 'add a video'){
-        foreach($_POST as $key => $value){
-            echo "KEY $key, VALUE $value <br>";
-        }
         if(!($stmt = $mysqli->prepare("INSERT INTO videos(name, category, length)
                 VALUES (?, ?, ?)
                 "))) {
@@ -109,6 +126,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         $stmt->close();
     }
+    //filter the video section
+    if (!empty($_POST['filter'])){
+
+        if ($_POST['filter'] === '_allmovies_') {
+            $filter_val = 0;
+        }
+        else {
+            $filter_val = $_POST['filter'];
+        }
+    }
 }
 
     echo "<fieldset>
@@ -124,10 +151,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <th>Delete
                 <th>Check-In/Check-Out
             </tr>";
-            if(!($stmt = $mysqli->prepare("SELECT v.id, v.name, v.category, v.length, v.rented
-                    FROM videos AS v
-                    "))){
-                echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+            
+            if ($filter_val === 0){
+                echo "showing all movies";
+                if(!($stmt = $mysqli->prepare("SELECT v.id, v.name, v.category, v.length, v.rented
+                        FROM videos AS v
+                        "))){
+                    echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+                }
+            } else {
+                echo "showing only $filter_val type movies";
+                if(!($stmt = $mysqli->prepare("SELECT v.id, v.name, v.category, v.length, v.rented
+                        FROM videos AS v
+                        WHERE category = ?
+                        "))){
+                    echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+                }
+                if(!$stmt->bind_param("s", $filter_val)){
+                    echo "Bind failed: " .$stmt->errno." ".$stmt->error;
+                }
             }
             if(!$stmt->execute()){
                 echo "Execute failed: " .$stmt->errno." ".$stmt->error;
