@@ -16,6 +16,30 @@ if ($mysqli->connect_errno){
 } else {
     echo "Databse connection succeeded!<br>";
 }
+?>
+
+<form action="./video.php"
+    method = "post">
+    <p><input type="submit" name="Delete" value="delete"></p>
+</form>
+
+<?php
+
+//check request method
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if (!empty($_POST) && $_POST['Delete'] == 'delete'){
+        if(!($stmt = $mysqli->prepare("DELETE
+                FROM videos
+                "))) {
+            echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->execute()){
+            echo "Execute failed: " .$stmt->errno." ".$stmt->error;
+        }
+
+        $stmt->close();
+    }
+}
 
 ?>
   </body>
