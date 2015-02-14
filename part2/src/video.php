@@ -31,45 +31,7 @@ if ($mysqli->connect_errno){
     </fieldset>
 </form>
 <?php
-    echo "<fieldset>
-        <legend>Video List</legend>
-        <table>
-            
-            <tr>
-                <th>id#
-                <th>Name
-                <th>Category
-                <th>Length
-                <th>Checked out
-                <th>Delete
-                <th>Check-In/Check-Out
-            </tr>";
-            if(!($stmt = $mysqli->prepare("SELECT v.id, v.name, v.category, v.length, v.rented
-                    FROM videos AS v
-                    "))){
-                echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
-            }
-            if(!$stmt->execute()){
-                echo "Execute failed: " .$stmt->errno." ".$stmt->error;
-            }
-            if(!$stmt->bind_result($id, $name, $category, $length, $rented)){
-                echo "Bind failed: " .$stmt->errno." ".$stmt->error;
-            }
-            while($stmt->fetch()){
-                echo "<tr>\n<td>\n".$id."\n<td>".$name."\n<td>".$category."\n<td>".$length."\n<td>".$rented;
-                echo '<form action="./video.php"
-                          method = "post">
-                          <td><input type="submit" value="Delete" name="'.$id.'">
-                        </form>';
-                echo '<form action="./video.php"
-                          method = "post">
-                          <td><input type="submit" value="CheckIn/Out" name="'.$id.'">
-                        </form>';
-                echo "</tr>";
-            }
-            $stmt->close();
-    echo "</table>
-    </fieldset>";
+
 ?>
 
 
@@ -109,7 +71,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         $stmt->close();
     }
+    //delete a video section
+    if (isset($_POST['DeleteRow'])){
+
+        echo "deleteing: $_POST[DeleteRow]";
+
+        if(!($stmt = $mysqli->prepare("DELETE FROM videos WHERE id=?
+                "))) {
+            echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->bind_param("i", $_POST['DeleteRow'])){
+            echo "Bind failed: " .$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->execute()){
+            echo "Execute failed: " .$stmt->errno." ".$stmt->error;
+        }
+
+        $stmt->close();
+    }
+    //check in/out a video section
+    if (!empty($_POST['CheckInOut']) && $_POST['CheckInOut'] == 'add a video'){
+
+        echo "toggling status: $_POST[CheckInOut]";
+
+        if(!($stmt = $mysqli->prepare("UPDATE videos
+                SET rented = !rented
+                WHERE id = ?
+                "))) {
+            echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->bind_param("i", $_POST['CheckInOut'])){
+            echo "Bind failed: " .$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->execute()){
+            echo "Execute failed: " .$stmt->errno." ".$stmt->error;
+        }
+
+        $stmt->close();
+    }
 }
+
+    echo "<fieldset>
+        <legend>Video List</legend>
+        <table>
+            
+            <tr>
+                <th>id#
+                <th>Name
+                <th>Category
+                <th>Length
+                <th>Checked out
+                <th>Delete
+                <th>Check-In/Check-Out
+            </tr>";
+            if(!($stmt = $mysqli->prepare("SELECT v.id, v.name, v.category, v.length, v.rented
+                    FROM videos AS v
+                    "))){
+                echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+            }
+            if(!$stmt->execute()){
+                echo "Execute failed: " .$stmt->errno." ".$stmt->error;
+            }
+            if(!$stmt->bind_result($id, $name, $category, $length, $rented)){
+                echo "Bind failed: " .$stmt->errno." ".$stmt->error;
+            }
+            while($stmt->fetch()){
+                echo "<tr>\n<td>\n".$id."\n<td>".$name."\n<td>".$category."\n<td>".$length."\n<td>".$rented;
+                echo '<form action="./video.php"
+                          method = "post">
+                          <td><input type="submit" value="DeleteRow" name="'.$id.'">
+                        </form>';
+                echo '<form action="./video.php"
+                          method = "post">
+                          <td><input type="submit" value="CheckInOut" name="'.$id.'">
+                        </form>';
+                echo "</tr>";
+            }
+            $stmt->close();
+    echo "</table>
+    </fieldset>";
 
 ?>
   </body>
