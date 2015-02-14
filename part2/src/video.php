@@ -29,28 +29,7 @@ if ($mysqli->connect_errno){
             Length: <input type="text" name="length">
                     <input type="submit" name="AddVideo" value="add a video"></p>
     </fieldset>
-    <fieldset>
-        <legend>Filter the Videos</legend>
-        <select name="filter">
-            <option value="_allmovies_">All Movies</option>
-        <?php
-            if(!($stmt = $mysqli->prepare("SELECT DISTINCT category FROM videos ORDER BY category"))){
-                echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
-            }
-            if(!$stmt->execute()){
-                echo "Execute failed: "  . $stmt->errno . " " . $stmt->error;
-            }
-            if(!$stmt->bind_result($category)){
-                echo "Bind failed: "  . $stmt->errno . " " . $stmt->error;
-            }
-            while($stmt->fetch()){
-             echo '<option value="'. $category .'"> ' . $category . '</option>\n';
-            }
-            $stmt->close();
-        ?>
-        </select>
-        <input type="submit" name="FilterVideo" value="apply filter">
-    </fieldset>
+    
 </form>
 
 
@@ -91,7 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     //delete a video section
     if (!empty($_POST['DeleteRow']) && $_POST['DeleteRow'] == 'delete'){
 
-        echo "deleteing: $_POST[DeleteRowID]";
 
         if(!($stmt = $mysqli->prepare("DELETE FROM videos WHERE id=?
                 "))) {
@@ -109,7 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     //check in/out a video section
     if (!empty($_POST['CheckInOut']) && $_POST['CheckInOut'] == 'update'){
 
-        echo "toggling status: $_POST[CheckInOutID]";
 
         if(!($stmt = $mysqli->prepare("UPDATE videos
                 SET rented = !rented
@@ -137,6 +114,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 }
+
+echo '<form action="./video.php"
+        method = "post">
+        <fieldset>
+        <legend>Filter the Videos</legend>
+        <select name="filter">
+            <option value="_allmovies_">All Movies</option>';
+            if(!($stmt = $mysqli->prepare("SELECT DISTINCT category FROM videos ORDER BY category"))){
+                echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
+            }
+            if(!$stmt->execute()){
+                echo "Execute failed: "  . $stmt->errno . " " . $stmt->error;
+            }
+            if(!$stmt->bind_result($category)){
+                echo "Bind failed: "  . $stmt->errno . " " . $stmt->error;
+            }
+            while($stmt->fetch()){
+             echo '<option value="'. $category .'"> ' . $category . '</option>\n';
+            }
+            $stmt->close();
+        
+echo '</select>
+        <input type="submit" name="FilterVideo" value="apply filter">
+    </fieldset>
+    </form>';
 
     echo "<fieldset>
         <legend>Video List</legend>
