@@ -72,15 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $stmt->close();
     }
     //delete a video section
-    if (isset($_POST['DeleteRow'])){
+    if (!empty($_POST['DeleteRow']) && $_POST['DeleteRow'] == 'delete'){
 
-        echo "deleteing: $_POST[DeleteRow]";
+        echo "deleteing: $_POST[DeleteRowID]";
 
         if(!($stmt = $mysqli->prepare("DELETE FROM videos WHERE id=?
                 "))) {
             echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
         }
-        if(!$stmt->bind_param("i", $_POST['DeleteRow'])){
+        if(!$stmt->bind_param("i", $_POST['DeleteRowID'])){
             echo "Bind failed: " .$stmt->errno." ".$stmt->error;
         }
         if(!$stmt->execute()){
@@ -90,9 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $stmt->close();
     }
     //check in/out a video section
-    if (!empty($_POST['CheckInOut']) && $_POST['CheckInOut'] == 'add a video'){
+    if (!empty($_POST['CheckInOut']) && $_POST['CheckInOut'] == 'update'){
 
-        echo "toggling status: $_POST[CheckInOut]";
+        echo "toggling status: $_POST[CheckInOutID]";
 
         if(!($stmt = $mysqli->prepare("UPDATE videos
                 SET rented = !rented
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 "))) {
             echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
         }
-        if(!$stmt->bind_param("i", $_POST['CheckInOut'])){
+        if(!$stmt->bind_param("i", $_POST['CheckInOutID'])){
             echo "Bind failed: " .$stmt->errno." ".$stmt->error;
         }
         if(!$stmt->execute()){
@@ -135,15 +135,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             if(!$stmt->bind_result($id, $name, $category, $length, $rented)){
                 echo "Bind failed: " .$stmt->errno." ".$stmt->error;
             }
+
             while($stmt->fetch()){
-                echo "<tr>\n<td>\n".$id."\n<td>".$name."\n<td>".$category."\n<td>".$length."\n<td>".$rented;
-                echo '<form action="./video.php"
+                echo "<tr>\n<td>\n".$id."\n<td>".$name."\n<td>".$category."\n<td>".$length."\n<td>";
+                if($rented == '1' ){
+                    $rented = 'checked out';
+                } else {
+                    $rented = 'available';
+                }
+                echo $rented;
+                echo '<td><form action="./video.php"
                           method = "post">
-                          <td><input type="submit" value="DeleteRow" name="'.$id.'">
+                          <input type="submit" name="DeleteRow" value="delete">
+                          <input type="hidden" name="DeleteRowID" value="'.$id.'">
                         </form>';
-                echo '<form action="./video.php"
+                echo '<td><form action="./video.php"
                           method = "post">
-                          <td><input type="submit" value="CheckInOut" name="'.$id.'">
+                          <input type="submit" name="CheckInOut" value="update">
+                          <input type="hidden" name="CheckInOutID" value="'.$id.'">
                         </form>';
                 echo "</tr>";
             }
