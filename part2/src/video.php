@@ -2,16 +2,20 @@
 <html lang = "en">
   <head>
     <meta charset="UTF-8">
-    <title>multtable PHP</title>
+    <title>Video Store</title>
   </head>
   <body>
 <?php
 // turn on error reporting
-error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 include 'pass.php';
+$mysqli = new mysqli("oniddb.cws.oregonstate.edu", "rousee-db", $db_pass, "rousee-db");
 
-echo $db_pass;
+if ($mysqli->connect_errno){
+    echo "Database connection failed: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error;
+} else {
+    echo "Databse connection succeeded!<br>";
+}
 
 ?>
   </body>

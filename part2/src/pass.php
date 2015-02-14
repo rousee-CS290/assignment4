@@ -1,1 +1,3 @@
-$db_pass = t8AVZ0LHCDilxZdU;
+<?php
+$db_pass = "t8AVZ0LHCDilxZdU";
+?>

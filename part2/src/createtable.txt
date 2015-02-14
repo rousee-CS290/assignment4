@@ -1,0 +1,7 @@
+CREATE TABLE videos(
+id INT PRIMARY KEY ,
+name VARCHAR( 255 ) UNIQUE NOT NULL ,
+category VARCHAR( 255 ) ,
+length INT,
+rented BOOL NOT NULL
+);
