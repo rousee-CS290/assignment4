@@ -26,4 +26,53 @@ td {
 td:hover {
     background-color: #fff;
 }
+.update1 {
+ background-color: #00A400;
+ -moz-border-radius: 5px;
+ -webkit-border-radius: 5px;
+ -moz-box-shadow: 3px 3px 1px #999;
+ -webkit-box-shadow: 3px 3px 1px #999;
+ border: solid 1px #CCC;
+ font-size:14px;
+ color: #ffffff;
+ text-shadow: 2px 2px 4px #000000;
+ }
+ 
+ .update1:hover {
+ background-color: #00CC00;
+ }
+
+ .delete1 {
+ background-color: #FF0000;
+ -moz-border-radius: 5px;
+ -webkit-border-radius: 5px;
+ -moz-box-shadow: 3px 3px 1px #999;
+ -webkit-box-shadow: 3px 3px 1px #999;
+ border: solid 1px #CCC;
+ font-size:14px;
+ color: #ffffff;
+ text-shadow: 2px 2px 4px #000000;
+ }
+ 
+ .delete1:hover {
+ background-color: #E00000;
+ }
+
+  .filter1 {
+ background-color: #0873FF;
+ -moz-border-radius: 5px;
+ -webkit-border-radius: 5px;
+ -moz-box-shadow: 3px 3px 1px #999;
+ -webkit-box-shadow: 3px 3px 1px #999;
+ border: solid 1px #CCC;
+ font-size:14px;
+ color: #ffffff;
+ text-shadow: 2px 2px 4px #000000;
+ }
+ 
+ .filter1:hover {
+ background-color: #072DE8;
+ }
+
+
 </style>

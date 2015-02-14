@@ -21,7 +21,7 @@ if ($mysqli->connect_errno){
 
 <form action="./video.php"
     method = "post">
-    <p><input type="submit" name="Delete" value="delete all videos"></p>
+    <p><input type="submit" name="Delete" value="delete all videos" class="delete1"></p>
     <fieldset>
         <legend>Add a Video</legend>
         <p>Name: <input type="text" name="name">
@@ -136,7 +136,7 @@ echo '<form action="./video.php"
             $stmt->close();
         
 echo '</select>
-        <input type="submit" name="FilterVideo" value="apply filter">
+        <input type="submit" name="FilterVideo" value="apply filter" class="filter1">
     </fieldset>
     </form>';
 
@@ -190,12 +190,12 @@ echo '</select>
                 echo $rented;
                 echo '<td><form action="./video.php"
                           method = "post">
-                          <input type="submit" name="DeleteRow" value="delete">
+                          <input type="submit" name="DeleteRow" value="delete" class="delete1">
                           <input type="hidden" name="DeleteRowID" value="'.$id.'">
                         </form>';
                 echo '<td><form action="./video.php"
                           method = "post">
-                          <input type="submit" name="CheckInOut" value="update">
+                          <input type="submit" name="CheckInOut" value="update" class="update1">
                           <input type="hidden" name="CheckInOutID" value="'.$id.'">
                         </form>';
                 echo "</tr>";
