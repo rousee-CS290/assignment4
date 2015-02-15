@@ -167,7 +167,7 @@ echo '<form action="./video.php"
                 echo "Bind failed: "  . $stmt->errno . " " . $stmt->error;
             }
             while($stmt->fetch()){
-             echo '<option value="'. $category .'"> ' . $category . '</option>\n';
+             if($category != ""){echo '<option value="'. $category .'"> ' . $category . '</option>\n';}
             }
             $stmt->close();
 //build the list
