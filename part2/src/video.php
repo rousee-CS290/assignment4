@@ -27,7 +27,7 @@ if ($mysqli->connect_errno){
         <p>Name: <input type="text" name="name">
             Category: <input type="text" name="category">
             Length: <input type="text" name="length">
-                    <input type="submit" name="AddVideo" value="add a video"></p>
+                    <input type="submit" name="AddVideo" value="add a video" class="update1"></p>
     </fieldset>
     
 </form>
@@ -36,6 +36,41 @@ if ($mysqli->connect_errno){
 
 <?php
 $filter_val = 0;
+function checkadd($mysqli){
+    $name = $_POST['name'];
+    $category = $_POST['category'];
+    $length = $_POST['length'];
+    $errorIn_parms = False;
+    if (!ctype_digit($length)){
+        echo "Length must be an integer >= 0; not $length.<br>";
+        $errorIn_parms = True;
+    }
+    if(empty($name)){
+        echo "Name of Video is required.<br>";
+        $errorIn_parms = True;
+    } else {
+        if(!($stmt = $mysqli->prepare("SELECT name FROM videos WHERE name = ? ORDER BY name
+                "))){
+            echo "Prepare failed: :".$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->bind_param("s", $name)){
+            echo "Bind failed: " .$stmt->errno." ".$stmt->error;
+        }
+        if(!$stmt->execute()){
+            echo "Execute failed: " .$stmt->errno." ".$stmt->error;
+        }
+        $stmt->store_result();
+        if($stmt->num_rows != 0){
+            echo "Name of Video must be unique.<br>";
+            $errorIn_parms = True;
+        }
+        $stmt->close();
+    }
+    if($errorIn_parms){
+        exit(0);
+    }
+
+}
 //check request method
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     //delete all videos button
@@ -53,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     }
     //add a video section
     if (!empty($_POST['AddVideo']) && $_POST['AddVideo'] == 'add a video'){
+        checkadd($mysqli);
         if(!($stmt = $mysqli->prepare("INSERT INTO videos(name, category, length)
                 VALUES (?, ?, ?)
                 "))) {
@@ -114,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 }
-
+//build the filter form
 echo '<form action="./video.php"
         method = "post">
         <fieldset>
@@ -134,7 +170,7 @@ echo '<form action="./video.php"
              echo '<option value="'. $category .'"> ' . $category . '</option>\n';
             }
             $stmt->close();
-        
+//build the list
 echo '</select>
         <input type="submit" name="FilterVideo" value="apply filter" class="filter1">
     </fieldset>
